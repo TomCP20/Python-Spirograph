@@ -1,14 +1,15 @@
 from math import pi, cos, sin
 from turtle import Turtle
 from colorsys import hsv_to_rgb
+from random import randint
 
 resolution = 360
 angleUnit = 2 * pi / resolution
-angleDelta1 = 1 * angleUnit
-angleDelta2 = 20 * angleUnit
+angleDelta1 = randint(1, 20) * angleUnit
+angleDelta2 = randint(1, 20) * angleUnit
 
-r1 = 200
-r2 = 180
+r1 = randint(50, 200)
+r2 = randint(50, 200)
 
 turtle = Turtle()
 turtle.screen.bgcolor("black")
