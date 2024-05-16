@@ -1,5 +1,5 @@
 from math import pi, cos, sin
-from turtle import Turtle, Screen
+from turtle import Turtle
 from colorsys import hsv_to_rgb
 
 resolution = 360
@@ -11,7 +11,7 @@ r1 = 200
 r2 = 180
 
 turtle = Turtle()
-Screen.bgcolor("black")
+turtle.screen.bgcolor("black")
 turtle.hideturtle()
 turtle.speed(0)
 
@@ -27,4 +27,4 @@ for i in range(resolution+1):
     turtle.setpos(x2, y2)
 
 
-Screen.mainloop()
+turtle.screen.mainloop()
