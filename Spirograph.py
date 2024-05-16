@@ -2,14 +2,18 @@ from math import pi, cos, sin, gcd
 from turtle import Turtle
 from colorsys import hsv_to_rgb
 from random import randint
+from time import sleep
 
 turtle = Turtle()
-turtle.screen.bgcolor("black")
-turtle.hideturtle()
-turtle.speed(0)
 
 resolution = 360
 
+def reset():
+    turtle.screen.clear()
+    turtle.screen.bgcolor("black")
+    turtle.hideturtle()
+    turtle.speed(0)
+    
 def random_spirograph():
     angle_delta_1 = randint(1, 20)
     angle_delta_2 = randint(-20, 20)
@@ -24,6 +28,7 @@ def random_spirograph():
 
 def spirograph(angle_delta_1, angle_delta_2, r1, r2):
     turtle.teleport(r1 + r2, 0)
+    reset()
     for i in range(resolution+1):
         x2, y2 = step(angle_delta_1, angle_delta_2, r1, r2, i/resolution)
 
@@ -38,7 +43,6 @@ def step(angle_delta_1, angle_delta_2, r1, r2, t):
     y2 = y1 + sin(t * angle_delta_2 * 2 * pi) * r2
     return x2,y2
 
-random_spirograph()
-
-
-turtle.screen.mainloop()
+while True:
+    random_spirograph()
+    sleep(1)
