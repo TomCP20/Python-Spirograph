@@ -6,7 +6,7 @@ from random import randint
 resolution = 360
 angleUnit = 2 * pi / resolution
 angleDelta1 = randint(1, 20)
-angleDelta2 = randint(1, 20)
+angleDelta2 = randint(-20, 20)
 factor = gcd(angleDelta1, angleDelta2)
 angleDelta1 = angleDelta1//factor
 angleDelta2 = angleDelta2//factor
