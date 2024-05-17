@@ -2,7 +2,6 @@ from math import pi, cos, sin, gcd
 from turtle import Turtle
 from colorsys import hsv_to_rgb
 from random import randint
-from time import sleep
 
 turtle = Turtle()
 
@@ -43,6 +42,10 @@ def step(angle_delta_1, angle_delta_2, r1, r2, t):
     y2 = y1 + sin(t * angle_delta_2 * 2 * pi) * r2
     return x2,y2
 
-while True:
+def loop(x, y):
     random_spirograph()
-    sleep(1)
+    turtle.screen.onclick(loop)
+
+random_spirograph()
+turtle.screen.onclick(loop)
+turtle.screen.mainloop()
