@@ -11,6 +11,7 @@ screen = Screen()
 turtle = Turtle()
 
 resolution = 360
+size = 390
 
 def reset():
     screen.clear()
@@ -24,14 +25,14 @@ def random_spirograph():
     while angle_delta_2 == 0 or angle_delta_1 == angle_delta_2:
         angle_delta_2 = randint(-20, 20)
     factor = gcd(angle_delta_1, angle_delta_2)
-    angle_delta_1 = angle_delta_1//factor
-    angle_delta_2 = angle_delta_2//factor
+    angle_delta_1 //= factor
+    angle_delta_2 //= factor
 
     r1 = randint(50, 200)
     r2 = randint(50, 200)
     sum_r = r1 + r2
-    r1 *= 390/sum_r
-    r2 *= 390/sum_r
+    r1 *= size/sum_r
+    r2 *= size/sum_r
 
     spirograph(angle_delta_1, angle_delta_2, r1, r2)
 
@@ -41,7 +42,7 @@ def spirograph(angle_delta_1, angle_delta_2, r1, r2):
     logger.debug(f"angle delta 2: {angle_delta_2}")
     logger.debug(f"r 1: {r1}")
     logger.debug(f"r 2: {r2}")
-    turtle.teleport(r1 + r2, 0)
+    turtle.teleport(size, 0)
     reset()
     for i in range(resolution+1):
         x2, y2 = step(angle_delta_1, angle_delta_2, r1, r2, i/resolution)
