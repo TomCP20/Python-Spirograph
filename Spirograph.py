@@ -1,15 +1,16 @@
 from math import pi, cos, sin, gcd
-from turtle import Turtle
+from turtle import Turtle, Screen
 from colorsys import hsv_to_rgb
 from random import randint
 
+screen = Screen()
 turtle = Turtle()
 
 resolution = 360
 
 def reset():
-    turtle.screen.clear()
-    turtle.screen.bgcolor("black")
+    screen.clear()
+    screen.bgcolor("black")
     turtle.hideturtle()
     turtle.speed(0)
     
@@ -22,6 +23,9 @@ def random_spirograph():
 
     r1 = randint(50, 200)
     r2 = randint(50, 200)
+    sum_r = r1 + r2
+    r1 *= 390/sum_r
+    r2 *= 390/sum_r
 
     spirograph(angle_delta_1, angle_delta_2, r1, r2)
 
@@ -44,8 +48,8 @@ def step(angle_delta_1, angle_delta_2, r1, r2, t):
 
 def loop(x, y):
     random_spirograph()
-    turtle.screen.onclick(loop)
+    screen.onclick(loop)
 
 random_spirograph()
-turtle.screen.onclick(loop)
-turtle.screen.mainloop()
+screen.onclick(loop)
+screen.mainloop()
