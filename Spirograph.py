@@ -45,17 +45,19 @@ def spirograph(angle_delta_1, angle_delta_2, r1, r2):
     turtle.teleport(size, 0)
     reset()
     for i in range(resolution+1):
-        x2, y2 = step(angle_delta_1, angle_delta_2, r1, r2, i/resolution)
+        x, y = step(angle_delta_1, angle_delta_2, r1, r2, i/resolution)
 
-        turtle.setpos(x2, y2)
+        turtle.setpos(x, y)
 
 def step(angle_delta_1, angle_delta_2, r1, r2, t):
     turtle.pencolor(hsv_to_rgb(t, 0.75, 0.75))
-    x1 = cos(t * angle_delta_1 * 2 * pi) * r1
-    y1 = sin(t * angle_delta_1 * 2 * pi) * r1
+    a = t * 2 * pi
 
-    x2 = x1 + cos(t * angle_delta_2 * 2 * pi) * r2
-    y2 = y1 + sin(t * angle_delta_2 * 2 * pi) * r2
+    x1 = cos(a * angle_delta_1) * r1
+    y1 = sin(a * angle_delta_1) * r1
+
+    x2 = x1 + cos(a * angle_delta_2) * r2
+    y2 = y1 + sin(a * angle_delta_2) * r2
     return x2,y2
 
 def loop(x, y):
