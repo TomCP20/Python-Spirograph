@@ -17,6 +17,8 @@ def reset():
 def random_spirograph():
     angle_delta_1 = randint(1, 20)
     angle_delta_2 = randint(-20, 20)
+    while angle_delta_2 == 0:
+        angle_delta_2 = randint(-20, 20)
     factor = gcd(angle_delta_1, angle_delta_2)
     angle_delta_1 = angle_delta_1//factor
     angle_delta_2 = angle_delta_2//factor
