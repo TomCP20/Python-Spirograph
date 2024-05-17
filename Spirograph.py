@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 screen = Screen()
 turtle = Turtle()
 
-resolution = 360
+resolution = 1000
 size = 390
 
 def reset():
