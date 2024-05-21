@@ -1,17 +1,25 @@
 from math import pi, cos, sin, gcd
-from turtle import _Screen, Turtle, Screen
+from tkinter import Canvas, Tk
+from turtle import RawTurtle, TurtleScreen
 from colorsys import hsv_to_rgb
 from random import randint
 import logging
+from PIL import ImageGrab
+import time
 
 logger: logging.Logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-screen: _Screen = Screen()
-turtle: Turtle = Turtle()
+root = Tk()
+canvas = Canvas(root, width=900, height=900)
+canvas.pack()
+
+turtle: RawTurtle = RawTurtle(canvas)
+
+screen: TurtleScreen = turtle.screen
 
 resolution: int = 1000
-size: int = 390
+size: int = 400
 
 def reset() -> None:
     screen.clear()
@@ -60,7 +68,15 @@ def step(angle_delta_1: int, angle_delta_2: int, r1: float, r2: float, t: float)
 
 def loop(x: float, y: float) -> None:
     random_spirograph()
+    screen.onclick(screenshot, btn=3)
     screen.onclick(loop)
+
+def screenshot(x: float, y: float) -> None:
+    x0 = root.winfo_rootx()
+    y0 = root.winfo_rooty()
+    x1 = x0 + root.winfo_width()
+    y1 = y0 + root.winfo_height()
+    ImageGrab.grab().crop((x0, y0, x1, y1)).save(f"imgs/{time.time()}.png")
 
 loop(0, 0)
 screen.mainloop()
