@@ -1,10 +1,10 @@
+from PIL import ImageGrab
 from math import pi, cos, sin, gcd
 from tkinter import Canvas, Tk
 from turtle import RawTurtle, TurtleScreen
 from colorsys import hsv_to_rgb
 from random import randint
 import logging
-from PIL import ImageGrab
 import time
 
 logger: logging.Logger = logging.getLogger(__name__)
