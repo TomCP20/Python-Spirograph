@@ -68,7 +68,7 @@ def loop(root: Tk, turtle: RawTurtle, screen: TurtleScreen, resolution: int, siz
     def sub_loop(x: float, y: float) -> None:
         images = random_spirograph(turtle, screen, resolution, size, create_gif)
         if (create_gif):
-            images[1].save(f"imgs/{time.time()}.gif", save_all=True, append_images=images[2:], optimize=False, duration=40, loop=0)
+            screen.onclick(save_gif(images), btn=2)
         screen.onclick(save_img(root), btn=3)
         screen.onclick(loop(root, turtle, screen, resolution, size, create_gif))
     return sub_loop
@@ -77,6 +77,12 @@ def save_img(root: Tk) -> Callable[[float, float], None]:
     def sub_save_img(x: float, y: float) -> None:
         screenshot(root).save(f"imgs/{time.time()}.png")
     return sub_save_img
+
+def save_gif(images: list[Image.Image]) -> Callable[[float, float], None]:
+    def sub_save_gif(x: float, y: float):
+        images[1].save(f"imgs/{time.time()}.gif", save_all=True, append_images=images[2:], optimize=False, duration=40, loop=0)
+    return sub_save_gif
+
 
 def screenshot(root: Tk) -> Image.Image:
     x0 = root.winfo_rootx()
