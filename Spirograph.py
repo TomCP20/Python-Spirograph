@@ -1,3 +1,4 @@
+import io
 from PIL import ImageGrab, Image
 from math import pi, cos, sin, gcd
 from tkinter import Canvas, Tk
@@ -86,7 +87,7 @@ def screenshot(root: Tk) -> Image.Image:
 
 if __name__ == '__main__':
     root: Tk = Tk()
-    canvas = Canvas(root, width=900, height=900)
+    canvas: Canvas = Canvas(root, width=900, height=900)
     canvas.pack()
 
     turtle: RawTurtle = RawTurtle(canvas)
