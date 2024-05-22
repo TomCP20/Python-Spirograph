@@ -76,7 +76,7 @@ def screenshot(x: float, y: float) -> None:
     y0 = root.winfo_rooty()
     x1 = x0 + root.winfo_width()
     y1 = y0 + root.winfo_height()
-    ImageGrab.grab().crop((x0+2, y0+2, x1-2, y1-2)).save(f"imgs/{time.time()}.png")
+    ImageGrab.grab(all_screens=True).crop((x0+2, y0+2, x1-2, y1-2)).save(f"imgs/{time.time()}.png")
 
 loop(0, 0)
 screen.mainloop()
