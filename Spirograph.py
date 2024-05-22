@@ -1,4 +1,4 @@
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 from math import pi, cos, sin, gcd
 from tkinter import Canvas, Tk
 from turtle import RawTurtle, TurtleScreen
@@ -68,15 +68,18 @@ def step(angle_delta_1: int, angle_delta_2: int, r1: float, r2: float, t: float)
 
 def loop(x: float, y: float) -> None:
     random_spirograph()
-    screen.onclick(screenshot, btn=3)
+    screen.onclick(save_img, btn=3)
     screen.onclick(loop)
 
-def screenshot(x: float, y: float) -> None:
+def save_img(x: float, y: float) -> None:
+    screenshot().save(f"imgs/{time.time()}.png")
+
+def screenshot() -> Image.Image:
     x0 = root.winfo_rootx()
     y0 = root.winfo_rooty()
     x1 = x0 + root.winfo_width()
     y1 = y0 + root.winfo_height()
-    ImageGrab.grab(all_screens=True).crop((x0+2, y0+2, x1-2, y1-2)).save(f"imgs/{time.time()}.png")
+    return ImageGrab.grab(all_screens=True).crop((x0+2, y0+2, x1-2, y1-2))
 
 loop(0, 0)
 screen.mainloop()
