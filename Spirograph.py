@@ -96,7 +96,7 @@ if __name__ == '__main__':
     resolution: int = 1000
     size: int = 400
 
-    create_gif: bool = True
+    create_gif: bool = False
 
     loop(root, turtle, screen, resolution, size, create_gif)(0, 0)
     screen.mainloop()
