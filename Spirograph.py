@@ -6,6 +6,7 @@ from turtle import RawTurtle, TurtleScreen
 from colorsys import hsv_to_rgb
 from random import randint
 import logging
+import configparser
 import time
 from typing import Callable
 
@@ -92,6 +93,13 @@ def screenshot(root: Tk) -> Image.Image:
     return ImageGrab.grab(all_screens=True).crop((x0+2, y0+2, x1-2, y1-2))
 
 if __name__ == '__main__':
+
+
+    Config = configparser.ConfigParser()
+
+    Config.read("config.ini")
+
+
     root: Tk = Tk()
     canvas: Canvas = Canvas(root, width=900, height=900)
     canvas.pack()
@@ -100,10 +108,10 @@ if __name__ == '__main__':
 
     screen: TurtleScreen = turtle.screen
 
-    resolution: int = 1000
-    size: int = 400
+    resolution: int = int(Config["Settings"]["resolution"])
+    size: int = int(Config["Settings"]["size"])
 
-    create_gif: bool = False
+    create_gif: bool = bool(Config["Settings"]["create_gif"])
 
     loop(root, turtle, screen, resolution, size, create_gif)(0, 0)
     screen.mainloop()
