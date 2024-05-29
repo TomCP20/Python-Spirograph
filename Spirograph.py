@@ -81,7 +81,7 @@ def save_img(root: Tk) -> Callable[[float, float], None]:
 
 def save_gif(images: list[Image.Image]) -> Callable[[float, float], None]:
     def sub_save_gif(x: float, y: float):
-        images[1].save(f"imgs/{time.time()}.gif", save_all=True, append_images=images[2:], optimize=False, duration=40, loop=0)
+        images[1].save(f"imgs/{time.time()}.gif", save_all=True, append_images=images[2:], optimize=False, fps=10, loop=0)
     return sub_save_gif
 
 
