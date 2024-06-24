@@ -21,57 +21,51 @@ def reset(turtle: RawTurtle, screen: TurtleScreen) -> None:
     turtle.hideturtle()
     turtle.speed(0)
     
-def random_spirograph(turtle: RawTurtle, screen: TurtleScreen, resolution: int, size: int, create_gif: bool) -> list[Image.Image]:
-    angle_delta_1: int = randint(1, 20)
-    angle_delta_2: int = randint(-20, 20)
-    while angle_delta_2 == 0 or angle_delta_1 == angle_delta_2:
-        angle_delta_2 = randint(-20, 20)
-    factor: int = gcd(angle_delta_1, angle_delta_2)
-    angle_delta_1 //= factor
-    angle_delta_2 //= factor
+def random_spirograph(turtle: RawTurtle, screen: TurtleScreen, resolution: int, size: int, create_gif: bool, arms: int) -> list[Image.Image]:
+    angle_deltas = [randint(-20, 20) for _ in range(arms)]
+    factor: int = gcd(*angle_deltas)
+    angle_deltas = [angle_delta//factor for angle_delta in angle_deltas]
 
-    r1: float = randint(50, 200)
-    r2: float = randint(50, 200)
-    sum_r: float = r1 + r2
-    r1 *= size/sum_r
-    r2 *= size/sum_r
+    rs = [randint(50, 200) for _ in range(arms)]
+    scale: float = size/sum(rs)
+    rs = [r*scale for r in rs]
 
-    return spirograph(turtle, screen, angle_delta_1, angle_delta_2, r1, r2, resolution, size, create_gif)
+    return spirograph(turtle, screen, angle_deltas, rs, resolution, size, create_gif)
 
-def spirograph(turtle: RawTurtle, screen: TurtleScreen, angle_delta_1: int, angle_delta_2: int, r1: float, r2: float, resolution: int, size: int, create_gif: bool) -> list[Image.Image]:
+def spirograph(turtle: RawTurtle, screen: TurtleScreen, angle_deltas: list[int], rs: list[float], resolution: int, size: int, create_gif: bool) -> list[Image.Image]:
     logger.debug("initiating spirograph")
-    logger.debug(f"angle delta 1: {angle_delta_1}")
-    logger.debug(f"angle delta 2: {angle_delta_2}")
-    logger.debug(f"r 1: {r1}")
-    logger.debug(f"r 2: {r2}")
+    for (i, angle_delta) in enumerate(angle_deltas):
+        logger.debug(f"angle delta {i}: {angle_delta}")
+    for (i, r) in enumerate(rs):
+        logger.debug(f"r {i}: {r}")
     images: list[Image.Image] = []
     turtle.teleport(size, 0)
     reset(turtle, screen)
     for i in range(resolution+1):
         turtle.pencolor(hsv_to_rgb(i/resolution, 0.75, 0.75))
-        turtle.setpos(*step(angle_delta_1, angle_delta_2, r1, r2, i/resolution))
+        turtle.setpos(*step(angle_deltas, rs, i/resolution))
         if create_gif:
             images.append(screenshot(root))
     return images
 
-def step(angle_delta_1: int, angle_delta_2: int, r1: float, r2: float, t: float) -> tuple[float, float]:
-    
+def step(angle_deltas: list[int], rs: list[float], t: float) -> tuple[float, float]:
     a: float = t * 2 * pi
+    x: float = 0
+    y: float = 0
 
-    x1: float = cos(a * angle_delta_1) * r1
-    y1: float = sin(a * angle_delta_1) * r1
+    for (angle_delta, r) in zip(angle_deltas, rs):
+        x += cos(a * angle_delta) * r
+        y += sin(a * angle_delta) * r
 
-    x2: float = x1 + cos(a * angle_delta_2) * r2
-    y2: float = y1 + sin(a * angle_delta_2) * r2
-    return x2,y2
+    return x, y
 
-def loop(root: Tk, turtle: RawTurtle, screen: TurtleScreen, resolution: int, size: int, create_gif: bool) -> Callable[[float, float], None]:
+def loop(root: Tk, turtle: RawTurtle, screen: TurtleScreen, resolution: int, size: int, create_gif: bool, arms: int) -> Callable[[float, float], None]:
     def sub_loop(x: float, y: float) -> None:
-        images = random_spirograph(turtle, screen, resolution, size, create_gif)
+        images = random_spirograph(turtle, screen, resolution, size, create_gif, arms)
         if (create_gif):
             screen.onclick(save_gif(images), btn=2)
         screen.onclick(save_img(root), btn=3)
-        screen.onclick(loop(root, turtle, screen, resolution, size, create_gif))
+        screen.onclick(loop(root, turtle, screen, resolution, size, create_gif, arms))
     return sub_loop
 
 def save_img(root: Tk) -> Callable[[float, float], None]:
@@ -110,8 +104,9 @@ if __name__ == '__main__':
 
     resolution: int = int(Config["Settings"]["resolution"])
     size: int = int(Config["Settings"]["size"])
+    arms: int = int(Config["Settings"]["arms"])
 
     create_gif: bool = bool(Config["Settings"]["create_gif"])
 
-    loop(root, turtle, screen, resolution, size, create_gif)(0, 0)
+    loop(root, turtle, screen, resolution, size, create_gif, arms)(0, 0)
     screen.mainloop()
