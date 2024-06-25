@@ -50,13 +50,8 @@ def spirograph(turtle: RawTurtle, screen: TurtleScreen, angle_deltas: list[int],
 
 def step(angle_deltas: list[int], rs: list[float], t: float) -> tuple[float, float]:
     a: float = t * 2 * pi
-    x: float = 0
-    y: float = 0
-
-    for (angle_delta, r) in zip(angle_deltas, rs):
-        x += cos(a * angle_delta) * r
-        y += sin(a * angle_delta) * r
-
+    x: float = sum(cos(a * angle_delta) * r for (angle_delta, r) in zip(angle_deltas, rs))
+    y: float = sum(sin(a * angle_delta) * r for (angle_delta, r) in zip(angle_deltas, rs))
     return x, y
 
 def loop(root: Tk, turtle: RawTurtle, screen: TurtleScreen, resolution: int, size: int, create_gif: bool, arms: int) -> Callable[[float, float], None]:
