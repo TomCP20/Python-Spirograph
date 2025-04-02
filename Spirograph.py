@@ -1,7 +1,7 @@
 """Spirograph"""
 from math import pi, cos, sin, gcd
 from tkinter import Canvas, Tk
-from turtle import RawTurtle, TurtleScreen
+from turtle import RawTurtle
 from colorsys import hsv_to_rgb
 from random import randint
 import logging
@@ -16,10 +16,10 @@ logger: logging.Logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-def reset(turtle: RawTurtle, screen: TurtleScreen) -> None:
+def reset(turtle: RawTurtle) -> None:
     """reset the turtle"""
-    screen.clear()
-    screen.bgcolor("black")
+    turtle.screen.clear()
+    turtle.screen.bgcolor("black")
     turtle.hideturtle()
     turtle.speed(0)
 
@@ -27,7 +27,6 @@ def reset(turtle: RawTurtle, screen: TurtleScreen) -> None:
 def random_spirograph(
     root: Tk,
     turtle: RawTurtle,
-    screen: TurtleScreen,
     resolution: int,
     size: int,
     create_gif: bool,
@@ -42,13 +41,12 @@ def random_spirograph(
     scale: float = size / sum(rs)
     rs = [r * scale for r in rs]
 
-    return spirograph(root, turtle, screen, angle_deltas, rs, resolution, size, create_gif)
+    return spirograph(root, turtle, angle_deltas, rs, resolution, size, create_gif)
 
 
 def spirograph(
     root: Tk,
     turtle: RawTurtle,
-    screen: TurtleScreen,
     angle_deltas: list[int],
     rs: list[float],
     resolution: int,
@@ -63,7 +61,7 @@ def spirograph(
         logger.debug("r %i: %f", i, r)
     images: list[Image.Image] = []
     turtle.teleport(size, 0)
-    reset(turtle, screen)
+    reset(turtle)
     for i in range(resolution + 1):
         turtle.pencolor(hsv_to_rgb(i / resolution, 0.75, 0.75))
         turtle.setpos(*step(angle_deltas, rs, i / resolution))
@@ -87,7 +85,6 @@ def step(angle_deltas: list[int], rs: list[float], t: float) -> tuple[float, flo
 def loop(
     root: Tk,
     turtle: RawTurtle,
-    screen: TurtleScreen,
     resolution: int,
     size: int,
     create_gif: bool,
@@ -95,11 +92,11 @@ def loop(
 ) -> Callable[[float, float], None]:
     """loops the spirograph on click"""
     def sub_loop(_x: float, _y: float) -> None:
-        images = random_spirograph(root, turtle, screen, resolution, size, create_gif, arms)
+        images = random_spirograph(root, turtle, resolution, size, create_gif, arms)
         if create_gif:
-            screen.onclick(save_gif(images), btn=2)
-        screen.onclick(save_img(root), btn=3)
-        screen.onclick(loop(root, turtle, screen, resolution, size, create_gif, arms))
+            turtle.screen.onclick(save_gif(images), btn=2)
+        turtle.screen.onclick(save_img(root), btn=3)
+        turtle.screen.onclick(loop(root, turtle, resolution, size, create_gif, arms))
 
     return sub_loop
 
@@ -138,9 +135,9 @@ def screenshot(root: Tk) -> Image.Image:
 
 def main():
     """main"""
-    Config = configparser.ConfigParser()
+    config = configparser.ConfigParser()
 
-    Config.read("config.ini")
+    config.read("config.ini")
 
     root: Tk = Tk()
     canvas: Canvas = Canvas(root, width=900, height=900)
@@ -148,16 +145,14 @@ def main():
 
     turtle: RawTurtle = RawTurtle(canvas)
 
-    screen: TurtleScreen = turtle.screen
+    resolution: int = int(config["Settings"]["resolution"])
+    size: int = int(config["Settings"]["size"])
+    arms: int = int(config["Settings"]["arms"])
 
-    resolution: int = int(Config["Settings"]["resolution"])
-    size: int = int(Config["Settings"]["size"])
-    arms: int = int(Config["Settings"]["arms"])
+    create_gif: bool = bool(config["Settings"]["create_gif"])
 
-    create_gif: bool = bool(Config["Settings"]["create_gif"])
-
-    loop(root, turtle, screen, resolution, size, create_gif, arms)(0, 0)
-    screen.mainloop()
+    loop(root, turtle, resolution, size, create_gif, arms)(0, 0)
+    turtle.screen.mainloop()
 
 if __name__ == "__main__":
     main()
