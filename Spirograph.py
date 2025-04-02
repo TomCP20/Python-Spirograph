@@ -1,3 +1,4 @@
+"""Spirograph"""
 from math import pi, cos, sin, gcd
 from tkinter import Canvas, Tk
 from turtle import RawTurtle, TurtleScreen
@@ -16,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 def reset(turtle: RawTurtle, screen: TurtleScreen) -> None:
+    """reset the turtle"""
     screen.clear()
     screen.bgcolor("black")
     turtle.hideturtle()
@@ -31,6 +33,7 @@ def random_spirograph(
     create_gif: bool,
     arms: int,
 ) -> list[Image.Image]:
+    """draw a random spirograph"""
     angle_deltas = [randint(-20, 20) for _ in range(arms)]
     factor: int = gcd(*angle_deltas)
     angle_deltas = [angle_delta // factor for angle_delta in angle_deltas]
@@ -52,6 +55,7 @@ def spirograph(
     size: int,
     create_gif: bool,
 ) -> list[Image.Image]:
+    """draw a spirograph"""
     logger.debug("initiating spirograph")
     for i, angle_delta in enumerate(angle_deltas):
         logger.debug("angle delta %i: %i", i, angle_delta)
@@ -69,6 +73,7 @@ def spirograph(
 
 
 def step(angle_deltas: list[int], rs: list[float], t: float) -> tuple[float, float]:
+    """generates the next step for the turtle"""
     a: float = t * 2 * pi
     x: float = sum(
         cos(a * angle_delta) * r for (angle_delta, r) in zip(angle_deltas, rs)
@@ -88,6 +93,7 @@ def loop(
     create_gif: bool,
     arms: int,
 ) -> Callable[[float, float], None]:
+    """loops the spirograph on click"""
     def sub_loop(_x: float, _y: float) -> None:
         images = random_spirograph(root, turtle, screen, resolution, size, create_gif, arms)
         if create_gif:
@@ -99,6 +105,7 @@ def loop(
 
 
 def save_img(root: Tk) -> Callable[[float, float], None]:
+    """saves a screenshot"""
     def sub_save_img(_x: float, _y: float) -> None:
         screenshot(root).save(f"imgs/{time.time()}.png")
 
@@ -106,6 +113,7 @@ def save_img(root: Tk) -> Callable[[float, float], None]:
 
 
 def save_gif(images: list[Image.Image]) -> Callable[[float, float], None]:
+    """saves a gif"""
     def sub_save_gif(_x: float, _y: float):
         images[1].save(
             f"imgs/{time.time()}.gif",
@@ -120,6 +128,7 @@ def save_gif(images: list[Image.Image]) -> Callable[[float, float], None]:
 
 
 def screenshot(root: Tk) -> Image.Image:
+    """takes a screenshot"""
     x0 = root.winfo_rootx()
     y0 = root.winfo_rooty()
     x1 = x0 + root.winfo_width()
@@ -128,6 +137,7 @@ def screenshot(root: Tk) -> Image.Image:
 
 
 def main():
+    """main"""
     Config = configparser.ConfigParser()
 
     Config.read("config.ini")
